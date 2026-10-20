@@ -1,0 +1,72 @@
+.id-view-page{padding:10px 8px}.id-view-page h1{font-size:24px;margin:0 0 12px}.id-view-panel{border:1px solid #a3aaa5;border-radius:2px;width:min(900px,100%);padding:18px 24px 24px;background:#fff}.id-view-panel h2{font-size:18px;margin:0 auto 10px;width:min(760px,100%)}
+.photo-id-card{width:min(760px,100%);aspect-ratio:1.58;margin:auto;border:1px solid #d0b299;border-radius:10px;overflow:hidden;box-shadow:0 3px 10px #513a241f;background:radial-gradient(ellipse at 8% 5%,#e7aa9470 0 13%,transparent 33%),radial-gradient(ellipse at 86% 82%,#efc2a370 0 18%,transparent 43%),linear-gradient(145deg,#f9e7ce,#f5d9bf 55%,#f9ead4);color:#34251d;position:relative}
+.photo-id-card::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(120deg,transparent 0 9px,#a96f4d0a 10px 11px);pointer-events:none}
+.photo-id-card:not(.active){display:none}
+.photo-id-field strong,.photo-id-emergency strong,.photo-id-emergency b{text-transform:uppercase}
+.photo-id-record-contact{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}.photo-id-record-contact .photo-id-field strong{font-size:13px}.photo-id-record-contact .photo-id-field small{font-size:10px}
+.photo-id-red-header{height:23%;background:#c90023;color:#fff;display:grid;grid-template-columns:100px 1fr 70px;align-items:center;text-align:center;padding:10px 20px;gap:8px}.photo-id-red-header small,.photo-id-red-header strong{display:block}.photo-id-red-header small{font-size:11px;font-weight:800}.photo-id-red-header strong{font-size:clamp(18px,2.6vw,31px);line-height:1.05}.photo-id-agency{font-weight:900;font-size:17px;border:3px solid #ffe5d3;border-radius:8px;padding:10px 2px}.photo-id-emblem{border:3px solid #ffe5d3;border-radius:50%;width:55px;height:55px;display:grid;place-items:center;font-weight:900;font-size:12px}
+.photo-id-front-body{display:grid;grid-template-columns:32% minmax(0,1fr);gap:18px;padding:24px 28px;position:relative;height:77%}.photo-id-picture{height:72%;min-height:180px;background:#eadbce;border:1px solid #baac9c;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:7px;color:#8c8178}.photo-id-picture img{width:100%;height:100%;object-fit:cover}.photo-id-picture small{font-size:10px}.photo-id-information{display:grid;align-content:start;gap:12px;min-width:0}.photo-id-field small,.photo-id-field strong{display:block}.photo-id-field small{font-size:12px;color:#775d4e}.photo-id-field strong{font-size:15px;line-height:1.1;overflow-wrap:anywhere}.photo-id-field.wide:first-child strong{font-size:21px}.photo-id-three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.photo-id-number{font-size:clamp(13px,2vw,23px);font-weight:900;letter-spacing:.3px;margin-top:4px}.photo-id-front-qr{position:absolute;right:22px;bottom:18px;width:85px;height:85px;background:#fff}.photo-id-information>.photo-id-field:nth-last-of-type(1){padding-right:85px}
+.photo-id-back-body{display:grid;grid-template-columns:47% 53%;gap:0;padding:7% 4%;height:100%;position:relative}.photo-id-back-copy{display:flex;flex-direction:column;justify-content:space-between;padding-right:25px}.photo-id-emergency small,.photo-id-emergency strong,.photo-id-emergency b{display:block}.photo-id-emergency small{font-size:12px;color:#6e584a;font-weight:800}.photo-id-emergency strong{font-size:18px;margin-top:10px}.photo-id-emergency b{font-size:15px;margin-top:3px}.photo-id-about{display:grid;grid-template-columns:72px 1fr;gap:10px;align-items:start}.photo-id-about>span{display:grid;place-items:center;background:#0e5d8d;color:#fff;width:62px;height:62px;border-radius:4px}.photo-id-about strong{font-size:13px}.photo-id-about p{font-size:12px;line-height:1.4;margin:4px 0}.photo-id-back-notes{font-size:12px;line-height:1.35}.photo-id-back-notes p{margin:3px 0}.photo-id-large-qr{display:flex;align-items:center;justify-content:center;flex-direction:column;min-width:0}.photo-id-large-qr img{width:min(100%,340px);aspect-ratio:1;background:#fff;image-rendering:pixelated}.photo-id-large-qr small{font-size:10px;margin-top:3px}
+.id-view-actions{width:min(760px,100%);margin:20px auto 0;display:flex;justify-content:space-between;gap:10px}.id-view-actions button{display:inline-flex;align-items:center;gap:7px;border:1px solid #999f9a;background:#f8f8f8;border-radius:3px;padding:5px 12px;font-size:13px;font-weight:700;cursor:pointer}
+@media(max-width:800px){.photo-id-red-header{grid-template-columns:65px 1fr 50px;padding:8px}.photo-id-agency{font-size:11px}.photo-id-emblem{width:45px;height:45px;font-size:9px}.photo-id-front-body{gap:10px;padding:16px}.photo-id-picture{min-height:0}.photo-id-information{gap:7px}.photo-id-field small{font-size:9px}.photo-id-field strong{font-size:11px}.photo-id-field.wide:first-child strong{font-size:15px}.photo-id-front-qr{width:60px;height:60px}.photo-id-number{font-size:13px}.photo-id-emergency small,.photo-id-about p,.photo-id-back-notes{font-size:9px}.photo-id-emergency strong{font-size:13px}.photo-id-emergency b{font-size:11px}.photo-id-about{grid-template-columns:48px 1fr}.photo-id-about>span{width:42px;height:42px}.photo-id-about strong{font-size:10px}}
+@media(max-width:560px){.id-view-panel{padding:12px}.photo-id-card{aspect-ratio:auto;min-height:310px}.photo-id-red-header{min-height:70px}.photo-id-red-header strong{font-size:16px}.photo-id-red-header small{font-size:7px}.photo-id-front-body{height:auto;min-height:240px;grid-template-columns:29% 1fr;padding:10px}.photo-id-picture{height:130px}.photo-id-picture svg{width:38px}.photo-id-picture small{font-size:7px}.photo-id-information{gap:5px}.photo-id-field small{font-size:8px}.photo-id-field strong{font-size:9px}.photo-id-field.wide:first-child strong{font-size:11px}.photo-id-three{gap:3px}.photo-id-number{font-size:10px;padding-right:55px}.photo-id-front-qr{right:6px;bottom:6px;width:48px;height:48px}.photo-id-back-body{min-height:310px;padding:16px 10px}.photo-id-back-copy{padding-right:7px}.photo-id-about{grid-template-columns:1fr}.photo-id-about>span{display:none}.photo-id-large-qr small{font-size:7px}.id-view-actions{flex-wrap:wrap}}
+@media print{.topbar,.sidebar,.id-view-page>.record-back,.id-view-page>h1,.id-view-panel>h2,.id-view-actions{display:none!important}.app-shell{display:block!important}.main{margin:0!important;width:100%!important}.content{padding:0!important}.id-view-page{padding:0}.id-view-panel{border:0;width:100%;padding:0}.photo-id-card{width:180mm;box-shadow:none;break-inside:avoid;print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+@page{size:A4 portrait;margin:10mm}
+/* CR80 / ID-1 physical dimensions. Scale the artwork and its text together. */
+@media print {
+  .id-print-cards { --id-print-scale: .4257; }
+  .id-print-cards .photo-id-card,
+  .id-print-cards .photo-id-card:not(.active) {
+    width: calc(85.6mm / var(--id-print-scale));
+    height: calc(53.98mm / var(--id-print-scale));
+    max-width: none;
+    min-height: 0;
+    flex: none;
+    zoom: var(--id-print-scale);
+    aspect-ratio: auto;
+  }
+}
+@media print{.id-print-cards{display:flex;flex-direction:column;align-items:center;gap:6mm}.photo-id-card,.photo-id-card:not(.active){display:block!important;width:180mm;height:114mm;min-height:0;aspect-ratio:auto;margin:0;box-shadow:none;break-inside:avoid;print-color-adjust:exact;-webkit-print-color-adjust:exact}.photo-id-front-body{height:77%;min-height:0;gap:18px;padding:24px 28px}.photo-id-picture{min-height:0}.photo-id-information{gap:12px}.photo-id-field small{font-size:12px}.photo-id-field strong{font-size:15px}.photo-id-field.wide:first-child strong{font-size:21px}.photo-id-red-header{grid-template-columns:100px 1fr 70px;padding:10px 20px}.photo-id-red-header strong{font-size:30px}.photo-id-red-header small{font-size:11px}.photo-id-front-qr{width:85px;height:85px;right:22px;bottom:18px}.photo-id-number{font-size:20px}.photo-id-back-body{height:100%;min-height:0;padding:7% 4%}.photo-id-large-qr img{width:min(100%,340px)}}
+/* Compact desktop preview; scale the entire card so its contents stay proportional. */
+@media screen and (min-width:801px){
+  .id-view-panel{width:min(470px,100%)}
+  .id-print-cards .photo-id-card{width:760px;max-width:none;zoom:.55}
+  .id-view-panel h2,.id-view-actions{width:100%;max-width:418px}
+}
+.photo-id-red-header .photo-id-agency,.photo-id-red-header .photo-id-emblem{border:0;padding:0;background:transparent;border-radius:0;display:grid;place-items:center}.photo-id-agency img{display:block;width:75px;max-width:100%;height:auto;object-fit:contain}.photo-id-emblem img{display:block;width:55px;max-width:100%;height:auto;object-fit:contain}@media(max-width:800px){.photo-id-agency img{width:52px}.photo-id-emblem img{width:42px}}@media print{.photo-id-agency img{width:75px}.photo-id-emblem img{width:55px}}
+.photo-id-red-header .photo-id-agency,.photo-id-red-header .photo-id-emblem{height:auto;gap:3px;align-content:center}.photo-id-logo-label{display:block;color:#fff;font-size:12px;font-weight:800;line-height:1.1;letter-spacing:.6px;text-align:center}@media(max-width:800px){.photo-id-logo-label{font-size:9px}}@media print{.photo-id-logo-label{font-size:12px}}
+.photo-id-red-header .photo-id-emblem{width:70px;height:70px}.photo-id-emblem img{width:70px;aspect-ratio:1;object-fit:contain;background:#fff;border-radius:50%;padding:3px}@media(max-width:800px){.photo-id-red-header .photo-id-emblem{width:45px;height:45px}.photo-id-emblem img{width:45px;padding:2px}}@media print{.photo-id-red-header .photo-id-emblem{width:70px;height:70px}.photo-id-emblem img{width:70px;padding:3px}}
+/* Decorative watermark stays behind the content in preview and print. */
+.photo-id-card{background:#f7e6cc}
+.photo-id-card::before{background:url("/id-watermark.svg") center/100% 100% no-repeat;pointer-events:none}
+.photo-id-red-header,.photo-id-front-body,.photo-id-back-body{position:relative;z-index:1}
+.photo-id-card::after{content:"";position:absolute;right:13%;bottom:13%;width:29%;aspect-ratio:1;background:url("/ncda-logo.png") center/contain no-repeat;opacity:.035;mix-blend-mode:multiply;pointer-events:none;z-index:0}
+@media print{.photo-id-card::before,.photo-id-card::after{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+/* Decorative holographic-style seal beside the portrait. */
+.photo-id-hologram{position:absolute;left:23%;top:42%;width:19%;aspect-ratio:1;border-radius:50%;pointer-events:none;z-index:0;opacity:.34;background:repeating-radial-gradient(ellipse at center,transparent 0 3px,#ffffff85 3.5px 4px,transparent 4.5px 6px),conic-gradient(from 30deg,#b4ead780,#a6d8fa99,#d6b4eaa6,#f0b6c780,#f6e5a499,#c6eeb099,#a7e7df99,#b4ead780);border:1px solid #ffffff70;box-shadow:inset 0 0 0 5px #ffffff24,inset 0 0 16px #fff8;transform:rotate(-18deg)}
+.photo-id-hologram::before{content:"";position:absolute;inset:12%;border:1px solid #fff9;border-radius:50%;background:repeating-conic-gradient(from 0deg,#ffffff60 0deg 1deg,transparent 1deg 12deg);opacity:.65}
+.photo-id-hologram::after{content:"";position:absolute;inset:0;border-radius:50%;background:linear-gradient(125deg,transparent 26%,#ffffffa6 44%,#fff3 53%,transparent 68%)}
+.photo-id-front-body>.photo-id-picture,.photo-id-front-body>.photo-id-information{position:relative;z-index:1}
+.photo-id-front-qr{z-index:2}
+@media print{.photo-id-hologram,.photo-id-hologram::before,.photo-id-hologram::after{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+/* Reference-style reverse: contact and information left, large QR right. */
+.photo-id-back-reference{grid-template-columns:46% 54%;padding:7% 4%;gap:0;align-items:stretch}
+.photo-id-back-reference .photo-id-back-copy{padding-right:24px;gap:20px}
+.photo-id-back-reference .photo-id-emergency small{font-size:11px;line-height:1.4}
+.photo-id-back-reference .photo-id-emergency strong{font-size:18px;line-height:1.25;overflow-wrap:anywhere;margin-top:10px}
+.photo-id-back-reference .photo-id-emergency b{font-size:14px}
+.photo-id-back-reference .photo-id-about{grid-template-columns:60px minmax(0,1fr);gap:12px}
+.photo-id-back-reference .photo-id-about>span{display:block;width:58px;height:58px;background:transparent}
+.photo-id-back-reference .photo-id-about>span img{display:block;width:100%;height:100%}
+.photo-id-back-reference .photo-id-about strong{font-size:12px}
+.photo-id-back-reference .photo-id-about p{font-size:12px;line-height:1.5;margin:5px 0 0}
+.photo-id-back-reference .photo-id-back-notes{font-size:11px;line-height:1.5}
+.photo-id-back-reference .photo-id-record-contact{margin:12px 0 0;gap:8px}
+.photo-id-back-reference .photo-id-record-contact .photo-id-field strong{font-size:11px}
+.photo-id-back-reference .photo-id-large-qr{justify-content:center;align-self:center}
+.photo-id-back-reference .photo-id-large-qr>img{width:100%;max-width:360px;aspect-ratio:1;object-fit:contain}
+.photo-id-back-reference .photo-id-large-qr small{text-align:center;font-size:9px}
+@media screen and (max-width:800px){.photo-id-back-reference .photo-id-back-copy{padding-right:12px;gap:14px}.photo-id-back-reference .photo-id-emergency small{font-size:8px}.photo-id-back-reference .photo-id-emergency strong{font-size:12px}.photo-id-back-reference .photo-id-emergency b{font-size:10px}.photo-id-back-reference .photo-id-about{grid-template-columns:38px minmax(0,1fr);gap:7px}.photo-id-back-reference .photo-id-about>span{width:36px;height:36px}.photo-id-back-reference .photo-id-about strong{font-size:9px}.photo-id-back-reference .photo-id-about p,.photo-id-back-reference .photo-id-back-notes{font-size:8px}.photo-id-back-reference .photo-id-record-contact .photo-id-field strong,.photo-id-back-reference .photo-id-record-contact .photo-id-field small{font-size:8px}.photo-id-back-reference .photo-id-large-qr small{font-size:7px}}
+@media screen and (max-width:440px){.photo-id-back-reference{padding:18px 12px;grid-template-columns:48% 52%}.photo-id-back-reference .photo-id-record-contact{grid-template-columns:1fr;gap:5px}}
+
+.photo-id-back-reference .photo-id-back-copy{gap:12px}.photo-id-back-reference .photo-id-ncda-contacts{margin-top:8px;font-size:10px;line-height:1.35}.photo-id-ncda-contacts p:not(:first-child){padding-left:10px}.photo-id-back-reference .photo-id-ncda-contacts p{margin:2px 0}.photo-id-back-reference .photo-id-record-contact{margin-top:8px}@media screen and (max-width:800px){.photo-id-back-reference .photo-id-ncda-contacts{font-size:7px}.photo-id-ncda-contacts p:not(:first-child){padding-left:5px}}

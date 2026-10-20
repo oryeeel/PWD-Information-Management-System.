@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 480" fill="none">
+  <defs>
+    <pattern id="fine-lines" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(32)">
+      <path d="M0 0V9" stroke="#956d4b" stroke-opacity=".1" stroke-width=".6"/>
+    </pattern>
+    <pattern id="waves" width="180" height="90" patternUnits="userSpaceOnUse">
+      <g stroke="#957e50" stroke-opacity=".17" stroke-width=".7">
+        <path d="M-90 45Q0-25 90 45T270 45M-90 51Q0-19 90 51T270 51M-90 57Q0-13 90 57T270 57M-90 63Q0-7 90 63T270 63M-90 69Q0-1 90 69T270 69M-90 75Q0 5 90 75T270 75M-90 81Q0 11 90 81T270 81M-90 87Q0 17 90 87T270 87"/>
+      </g>
+    </pattern>
+  </defs>
+  <path d="M450-80L820 70 550 240 340 115Z" fill="#c77566" opacity=".12"/>
+  <path d="M770 105L770 470 370 530 480 300Z" fill="#b6845b" opacity=".1"/>
+  <path d="M-110 80L235 255 40 490-100 300Z" fill="#e0bd77" opacity=".17"/>
+  <rect width="760" height="480" fill="url(#fine-lines)"/>
+  <rect width="760" height="480" fill="url(#waves)"/>
+  <g stroke="#b17b53" stroke-width="1" opacity=".14">
+    <ellipse cx="555" cy="340" rx="160" ry="110"/><ellipse cx="555" cy="340" rx="150" ry="103"/>
+    <ellipse cx="555" cy="340" rx="140" ry="96"/><ellipse cx="555" cy="340" rx="130" ry="89"/>
+    <ellipse cx="555" cy="340" rx="120" ry="82"/><ellipse cx="555" cy="340" rx="110" ry="75"/>
+    <ellipse cx="555" cy="340" rx="100" ry="68"/>
+  </g>
+</svg>

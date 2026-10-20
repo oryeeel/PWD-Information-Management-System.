@@ -1,0 +1,172 @@
+/* Presentation only: preserve the existing routes, data, controls and print layouts. */
+@media screen {
+  :root {
+    --office-primary: #087f46;
+    --office-primary-hover: #066b3b;
+    --office-header: #ffffff;
+    --office-canvas: #f2faf5;
+    --office-surface: #ffffff;
+    --office-mint: #e0f7e9;
+    --office-border: #e5e9e6;
+    --office-text: #202923;
+    --office-muted: #68746d;
+    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    color: var(--office-text);
+    background: var(--office-canvas);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .app-shell .topbar {
+    background: #fff;
+    color: #253b2e;
+    border-bottom: 1px solid #e9ece9;
+    box-shadow: none;
+  }
+  .header-brand strong { font-weight: 650; letter-spacing: -.3px; }
+  .header-brand .office-subtitle { color: #718077; }
+  .app-shell .topbar .icon-btn,
+  .app-shell .mobile-menu-button { background: #f3f6f3; color: #245b3d; border-radius: 50%; }
+  .app-shell .sidebar { background: #f6fcf8; border-right: 1px solid #e9ece9; }
+  .app-shell .sidebar nav { gap: 7px; }
+  .app-shell .sidebar nav a { color: #68746d; font-weight: 500; border-radius: 10px; padding-top: 11px; padding-bottom: 11px; }
+  .app-shell .sidebar nav a:hover { background: #e5f8ec; color: #087f46; }
+  .app-shell .sidebar nav a.active { background: #d6f5e1; color: #086b3b; font-weight: 650; box-shadow: inset 3px 0 #16b85d; }
+  .app-shell .main { background: #f2faf5; }
+  .app-shell .content { padding: 26px 28px 40px; }
+  .app-shell :is(h1,h2,h3) { color: #202923; font-weight: 600; letter-spacing: -.45px; }
+  .app-shell :is(.page-title h1,.add-record-page h1) { font-size: 26px; line-height: 1.25; }
+  .app-shell .page-title { margin-bottom: 22px; flex-wrap: wrap; }
+  .app-shell .add-record-page h1 { margin-bottom: 20px; }
+
+  .app-shell :is(.panel,.records-panel,.reports-panel,.add-form-panel,.record-detail-card,.staff-stat,.overview-stat,.stat,.id-view-panel) {
+    background: #fff;
+    border: 1px solid #e9ede9;
+    border-radius: 18px;
+    box-shadow: 0 3px 14px #253d2c04;
+  }
+  .app-shell :is(.records-panel,.reports-panel,.add-form-panel) { padding: 22px; }
+  .app-shell .overview-stats { gap: 16px; margin-bottom: 22px; }
+  .app-shell .overview-stat { padding: 20px 18px 14px; color: #12a65b; }
+  .app-shell .overview-stat-main { gap: 12px; }
+  .app-shell .overview-stat-main small { font-size: 11px; font-weight: 600; letter-spacing: .3px; }
+  .app-shell .overview-stat-main strong { color: #202923; font-size: 36px; font-weight: 600; letter-spacing: -1px; }
+  .app-shell :is(.overview-stat-detail,.stat-foot) { color: #6d7a71; }
+  .app-shell .overview-stat-icon { width: 42px; height: 42px; background: #e4faec; border-color: #e0ebe3; color: #078747; }
+  .app-shell .overview-stat:first-child { background: linear-gradient(125deg,#087f46,#27b967); border-color: #087f46; color: #d5ffb1; }
+  .app-shell .overview-stat:first-child :is(.overview-stat-main small,.overview-stat-main strong) { color: #fff; }
+  .app-shell .overview-stat:first-child :is(.overview-stat-detail,.stat-foot) { color: #e9ffe7; }
+  .app-shell .overview-stat:first-child .stat-foot { border-color: #ffffff30; }
+  .app-shell .overview-stat:first-child .overview-stat-icon { background: #ffffff15; border-color: #ffffff35; color: #fff; }
+  .app-shell .overview-panels { gap: 22px; }
+  .app-shell .overview-panels .panel { padding: 22px; border-radius: 18px; }
+  .app-shell .overview-panels .panel h3 { font-size: 16px; margin-bottom: 16px; }
+  .app-shell .distribution-note { background: #e6f9ec; color: #42604b; border-radius: 10px; padding: 12px; }
+  .app-shell .stat-sparkline { filter: none; }
+
+  .app-shell :is(.primary,.messages-new,.messages-send,.report-download-button,.reports-bottom button),
+  .login-card .primary { background: #087f46; color: #fff; border: 1px solid #087f46; border-radius: 24px; font-weight: 600; }
+  .app-shell :is(.primary,.messages-new,.messages-send,.report-download-button,.reports-bottom button):hover,
+  .login-card .primary:hover { background: #066b3b; color: #fff; }
+  .app-shell :is(.secondary,.small-btn,.records-clear,.records-search button,.add-form-actions button,.record-detail-actions button,.record-detail-actions a,.id-view-actions button) {
+    background: #fff; border: 1px solid #d5dfd8; color: #29583e; border-radius: 24px; font-weight: 600;
+  }
+  .app-shell :is(.secondary,.records-clear,.record-detail-actions button,.record-detail-actions a):hover { background: #e2f8eb; }
+  .app-shell .add-form-actions button[type=submit] { background: #087f46; border-color: #087f46; color: #fff; }
+  .app-shell .records-header-actions a { padding: 9px 15px; white-space: nowrap; }
+  .app-shell .add-form-actions button { padding: 10px 18px; font-size: 13px; }
+
+  .app-shell :is(input:not([type=checkbox]):not([type=radio]):not([type=file]),select,textarea) {
+    background-color: #fff; color: #25392c; border: 1px solid #dce3dd; border-radius: 8px;
+  }
+  .app-shell :is(input,select,textarea) { accent-color: #087f46; }
+  .app-shell :is(input,textarea)::placeholder { color: #849087; }
+  .app-shell :is(input,select,textarea,button,a):focus-visible { outline: 2px solid #11a75a; outline-offset: 3px; }
+  .app-shell .records-search-input { border: 1px solid #e1e7e2; border-radius: 24px; height: 38px; padding: 0 14px; background: #f5fcf8; }
+  .app-shell .records-search-input input { border: 0; background: transparent; }
+  .app-shell .records-search button { height: 38px; }
+  .app-shell .records-filters select { height: 38px; }
+  .app-shell .records-clear { height: 38px; }
+  .app-shell .add-form-grid input:not([type=radio]):not([type=checkbox]):not([type=file]),
+  .app-shell .add-form-grid select { height: 38px; padding: 7px 10px; font-size: 13px; }
+  .app-shell .add-fixed-status { height: 38px; border-radius: 8px; font-style: normal; }
+  .app-shell .add-photo-field { background: #f0fbf4; border-color: #e1e8e2; border-radius: 12px; padding: 14px; }
+  .app-shell .add-form-panel h2 { font-size: 17px; margin-bottom: 22px; }
+  .edit-record-page,.add-record-page,.record-detail-page { width: 100%; max-width: 880px; margin: 0 auto; }
+  .record-detail-page .record-detail-card { width: 100%; }
+  .id-view-page { width: 100%; max-width: 916px; margin: 0 auto; }
+  .id-view-page .id-view-panel { margin: 0 auto; }
+  @media(min-width:801px) { .id-view-page { max-width: 486px; } }
+  .edit-record-page .panel { padding: 24px; }
+  .edit-form-section + .edit-form-section { border-top: 1px solid #e1e9e3; margin-top: 24px; padding-top: 20px; }
+  .app-shell .edit-form-section h2 { font-size: 16px; margin: 0 0 14px; }
+  .edit-fields { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px 22px; }
+  .edit-fields-personal { grid-template-columns: repeat(3,minmax(0,1fr)); }
+  .edit-fields>label { display: block; min-width: 0; font-size: 13px; font-weight: 500; }
+  .edit-fields>label>input,.edit-fields>label>select,.edit-fields>label>textarea { display: block; margin-top: 6px; }
+  .edit-fields>label:has(textarea) { grid-column: 1/-1; }
+  .edit-fields input,.edit-fields select { min-height: 40px; }
+  .edit-fields textarea { min-height: 70px; resize: vertical; }
+  .edit-fields>label>span { display: contents; }
+  .edit-fields .edit-specific-disabilities { grid-column: 1/-1; margin: 0; }
+  .edit-fields .edit-specific-disabilities input { min-height: 0; }
+  .edit-record-page .form-actions { border-top: 1px solid #e1e9e3; margin-top: 24px; padding-top: 18px; gap: 10px; }
+  @media(max-width:680px) {
+    .edit-record-page .panel { padding: 16px; }
+    .edit-fields,.edit-fields-personal { grid-template-columns: minmax(0,1fr); }
+  }
+  .app-shell :is(.add-form-grid label,.records-filters label) { font-weight: 500; }
+
+  .app-shell :is(.records-table,.messages-table,.recent-table,.barangay-report-scroll table) th { background: #eaf8ef; color: #5c6d61; border-color: #e7ece8; font-weight: 600; }
+  .app-shell :is(.records-table,.messages-table,.recent-table,.barangay-report-scroll table) td { border-color: #edf0ed; }
+  .app-shell .records-table :is(th,td) { padding-top: 14px; padding-bottom: 14px; }
+  .app-shell :is(.records-table,.messages-table,.recent-table) tbody tr:hover { background: #f0fcf4; }
+  .app-shell .record-actions { gap: 9px; }
+  .app-shell .record-actions :is(a,button) { width: 28px; height: 28px; border-radius: 8px; }
+  .app-shell .record-actions :is(a,button):hover { background: #e0f7e9; }
+  .app-shell .record-actions .view { color: #09854c; }
+  .app-shell .record-actions .edit { color: #2563eb; }
+  .app-shell .record-actions .card { color: #9333ea; }
+  .app-shell .record-actions .archive { color: #c65d0a; }
+  .app-shell :is(.badge.ok,.messages-status.sent,.add-fixed-status,.record-status.active,.recent-activity) { background: #d9f8e5; color: #06733c; border-color: #d6e6da; }
+  .app-shell .records-pages span { background: #087f46; border-color: #087f46; color: #fff; border-radius: 8px; }
+  .app-shell .records-pages button { border-radius: 8px; border-color: #dce5df; }
+  .records-footer-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+  .app-shell .barangay-report-heading { background: #eaf9ef; }
+  .app-shell .barangay-report-section h3 { background: #087f46; border-color: #066b3b; color: #fff; }
+  .app-shell .messages-tabs button.active { background: #087f46; border-color: #087f46; color: #fff; }
+  .app-shell .messages-footer b { background: #087f46; color: #fff; }
+
+  .login-card { border: 1px solid #ffffffbb; border-radius: 22px; box-shadow: 0 20px 65px #16342320; }
+  .login-card .role-switch { border-color: #dce5de; border-radius: 12px; }
+  .login-card .role-switch .active { background: #087f46; color: #fff; }
+  .login-card input { border-color: #dce5de; border-radius: 9px; }
+  .disability-symbol-tile { color: #fff; }
+
+  @media(max-width:1100px) { .app-shell .overview-panels { gap: 18px; } }
+  @media(max-width:650px) {
+    .app-shell .content { padding: 18px 12px 28px; }
+    .app-shell :is(.records-panel,.reports-panel,.add-form-panel,.overview-panels .panel) { padding: 16px 12px; border-radius: 14px; }
+    .app-shell .overview-stat { padding: 14px 10px; }
+    .app-shell .overview-stat-main { gap: 7px; }
+    .app-shell .overview-stat-icon { width: 32px; height: 32px; }
+    .app-shell .overview-stat-main strong { font-size: 28px; }
+    .app-shell .overview-stat-main small { font-size: 9px; }
+    .app-shell :is(.page-title h1,.add-record-page h1) { font-size: 23px; }
+  }
+}
+.logout-dialog{width:min(420px,calc(100% - 32px));border:1px solid #dce8df;border-radius:16px;padding:24px;box-shadow:0 20px 70px #10251c33;color:#253b2e;background:#fff}
+.logout-dialog::backdrop{background:#10251c80}
+.logout-dialog h2{font-size:21px;margin:0 0 12px}
+.logout-dialog p{font-size:15px;margin:0 0 24px;line-height:1.5}
+.logout-dialog>div{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:10px}
+@media screen {
+  .app-shell .topbar{background:#14633f;color:#fff;border-bottom-color:#0f5132;box-shadow:0 2px 10px #14532d18}
+  .app-shell .topbar .header-brand strong,.app-shell .topbar .header-brand .office-subtitle,.app-shell .topbar .header-date,.app-shell .topbar .header-user{color:#fff}
+  .app-shell .topbar .icon-btn,.app-shell .topbar .mobile-menu-button{background:#ffffff1f;color:#fff;border-color:#ffffff40}
+  .app-shell .topbar .icon-btn:hover,.app-shell .topbar .mobile-menu-button:hover{background:#ffffff38}
+  .app-shell .topbar button:focus-visible{outline-color:#fff}
+  .app-shell .sidebar{background:#edf9f1;border-right-color:#d4eadd}
+  .app-shell .sidebar nav a{color:#365b46}
+  .app-shell .sidebar nav a:hover{background:#d5f3e0;color:#116b3a}
+  .app-shell .sidebar nav a.active{background:#118647;color:#fff;box-shadow:inset 4px 0 #7bea9e}
+}

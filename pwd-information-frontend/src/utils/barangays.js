@@ -1,0 +1,1 @@
+export const barangays = ['Balacanas','Dayawan','Imelda','Katipunan','Kimaya','Looc','Poblacion 1','Poblacion 2','Poblacion 3','San Martin','Tambobong']

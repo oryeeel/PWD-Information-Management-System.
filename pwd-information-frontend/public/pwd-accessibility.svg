@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="PWD wheelchair accessibility symbol">
+  <rect width="100" height="100" rx="12" fill="#1261a0"/>
+  <g fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M36 49a23 23 0 1 0 24 29"/>
+    <path d="M43 34v27h23l12 23h9M44 45h22"/>
+  </g>
+  <circle cx="43" cy="21" r="9" fill="#fff"/>
+</svg>
