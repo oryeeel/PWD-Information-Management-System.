@@ -1,3 +1,4 @@
+import {recordStaffEvent,apiFetch} from '../utils/apiFetch'
 import React, {useEffect, useState} from 'react'
 import {Link, useParams} from 'react-router-dom'
 import {ArrowLeft, Printer, UserRound, ArrowRightLeft} from 'lucide-react'
@@ -35,11 +36,11 @@ export default function IdCard() {
     let cancelled = false
     async function load() {
       try {
-        const response = await fetch(`http://localhost:8081/api/records/${encodeURIComponent(id)}`)
+        const response = await apiFetch(`http://localhost:8081/api/records/${encodeURIComponent(id)}`)
         const data = await response.json()
         if (!response.ok) throw new Error(data.message || 'PWD record not found')
         const code = await createIdQr(data.pwdId)
-        if (!cancelled) {setRecord(data);setQr(code)}
+        if (!cancelled) {setRecord(data);setQr(code);void recordStaffEvent('Viewed ID card',id)}
       } catch (err) {if (!cancelled) setError(err.message)}
     }
     load()

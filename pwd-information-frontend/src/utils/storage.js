@@ -3,10 +3,10 @@ const MESSAGES_KEY = 'pwd_messages_v1'
 const MESSAGE_EXAMPLES_KEY = 'pwd_message_examples_added_v1'
 const SESSION_KEY = 'pwd_session_v1'
 // Keep login across refreshes in this tab, but never restore a persistent login.
-localStorage.removeItem(SESSION_KEY)
+if (typeof localStorage !== 'undefined') localStorage.removeItem(SESSION_KEY)
 
 // Remove records left by the old browser-only demo. PWD records now live in MongoDB.
-localStorage.removeItem('pwd_records_v1')
+if (typeof localStorage !== 'undefined') localStorage.removeItem('pwd_records_v1')
 
 export const seedUsers = [
   { id:1, username:'admin', fullname:'System Administrator', role:'Admin', status:'Active', password:'admin123' },
@@ -58,6 +58,45 @@ export function loadMessages() {
     saved = [...saved,...examples]
     localStorage.setItem(MESSAGES_KEY,JSON.stringify(saved))
     localStorage.setItem(MESSAGE_EXAMPLES_KEY,'1')
+  }
+  const altheaDraftKey = 'pwd_althea_sms_demo_draft_v1'
+  if (!localStorage.getItem(altheaDraftKey)) {
+    if (!saved.some(item => item.id === 'althea-sms-demo')) {
+      saved = [{
+        id:'althea-sms-demo',title:'PWD Interview Notice',type:'Interview',
+        message:'Hello Althea, your PWD registration interview is on Monday, October 26, 2026 at 10:00 AM at MSWDO Villanueva. Please arrive 15 minutes early.',
+        recipientIds:['PWD-0001'],recipientCount:1,status:'Draft',atIso:new Date().toISOString(),
+      },...saved]
+      localStorage.setItem(MESSAGES_KEY,JSON.stringify(saved))
+    }
+    localStorage.setItem(altheaDraftKey,'1')
+  }
+  const reminderKey = 'pwd_althea_registration_reminder_v1'
+  if (!localStorage.getItem(reminderKey)) {
+    saved = saved.map(item => item.id === 'althea-sms-demo' && item.status === 'Draft' ? {
+      ...item,title:'PWD Registration Reminder',
+      message:'Hello Althea, please ensure your PWD registration details are up to date. For assistance, contact MSWDO Villanueva. Thank you.',
+    } : item)
+    localStorage.setItem(MESSAGES_KEY,JSON.stringify(saved))
+    localStorage.setItem(reminderKey,'1')
+  }
+  const interviewKey = 'pwd_althea_interview_notice_v1'
+  if (!localStorage.getItem(interviewKey)) {
+    saved = saved.map(item => item.id === 'althea-sms-demo' && item.status === 'Draft' ? {
+      ...item,title:'PWD Interview Notice',type:'Interview',
+      message:'Hello Althea, your PWD registration interview is on Monday, October 26, 2026 at 10:00 AM at MSWDO Villanueva. Please arrive 15 minutes early.',
+    } : item)
+    localStorage.setItem(MESSAGES_KEY,JSON.stringify(saved))
+    localStorage.setItem(interviewKey,'1')
+  }
+  const scheduleKey = 'pwd_althea_interview_oct26_v1'
+  if (!localStorage.getItem(scheduleKey)) {
+    saved = saved.map(item => item.id === 'althea-sms-demo' && item.status === 'Draft' ? {
+      ...item,title:'PWD Interview Notice',type:'Interview',
+      message:'Hello Althea, your PWD registration interview is on Monday, October 26, 2026 at 10:00 AM at MSWDO Villanueva. Please arrive 15 minutes early.',
+    } : item)
+    localStorage.setItem(MESSAGES_KEY,JSON.stringify(saved))
+    localStorage.setItem(scheduleKey,'1')
   }
   return saved
 }

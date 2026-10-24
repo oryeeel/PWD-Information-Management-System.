@@ -1,3 +1,5 @@
+import {getSession} from '../utils/storage'
+import {userDisplayName} from '../utils/userDisplayName'
 import React, {useMemo,useRef} from 'react'
 import {Link} from 'react-router-dom'
 import {Accessibility, ArrowRight, CalendarDays, Download, FileBarChart2, FilePlus2, Mail, Megaphone, Search, UserRound, Users} from 'lucide-react'
@@ -56,7 +58,7 @@ export default function StaffDashboard() {
   try {reportsThisMonth = JSON.parse(localStorage.getItem('pwd_report_exports_v1') || '[]').filter(date => monthKey(date) === thisMonth).length} catch { /* Storage may be unavailable. */ }
 
   return <div className="staff-dashboard">
-    <header className="staff-welcome"><h1>Good {new Date().getHours() < 12 ? 'Morning' : new Date().getHours() < 18 ? 'Afternoon' : 'Evening'}, Staff!</h1><p>Here&apos;s your system overview.</p></header>
+    <header className="staff-welcome"><h1>Good {new Date().getHours() < 12 ? 'Morning' : new Date().getHours() < 18 ? 'Afternoon' : 'Evening'}, {userDisplayName(getSession())}!</h1><p>Here&apos;s your system overview.</p></header>
     {error && <div className="empty">Could not load records: {error}</div>}
     <div className="staff-stats">
       <StaffStat icon={<Users size={30}/>} label="TOTAL PWDS" value={records.length} detail="All records"/>

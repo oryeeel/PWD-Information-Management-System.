@@ -1,6 +1,8 @@
+import {recordStaffEvent} from '../utils/apiFetch'
+import {userDisplayName} from '../utils/userDisplayName'
 import React, {useEffect,useRef,useState} from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, Accessibility, UserPlus, FileBarChart, Users, MessageSquare, LogOut, CalendarDays, UserCircle, Menu, X } from 'lucide-react'
+import { LayoutDashboard, Accessibility, UserPlus, FileBarChart, Users, MessageSquare, LogOut, CalendarDays, UserCircle, Menu, X, ClipboardList } from 'lucide-react'
 import { clearSession, getSession } from '../utils/storage'
 
 const items = [
@@ -10,6 +12,7 @@ const items = [
   ['/reports', 'Reports', FileBarChart],
   ['/messages', 'Messages', MessageSquare],
   ['/users', 'Users', Users],
+  ['/activity-logs', 'Activity Logs', ClipboardList],
 ]
 
 export default function Layout({children}) {
@@ -18,7 +21,7 @@ export default function Layout({children}) {
   const [menuOpen,setMenuOpen] = useState(false)
   const logoutDialog = useRef(null)
   const user = getSession()
-  const visibleItems = user?.role === 'Staff' ? items.filter(i => i[0] !== '/users').map(i => i[0] === '/messages' ? [i[0], 'Send a Message', i[2]] : i) : items.filter(i => i[0] !== '/messages')
+  const visibleItems = user?.role === 'Staff' ? items.filter(i => i[0] !== '/users' && i[0] !== '/activity-logs').map(i => i[0] === '/messages' ? [i[0], 'Send a Message', i[2]] : i) : items.filter(i => i[0] !== '/messages' && i[0] !== '/add')
 
   useEffect(() => setMenuOpen(false),[location.pathname])
 
@@ -29,7 +32,7 @@ export default function Layout({children}) {
         <div className="header-brand"><img className="seal office-logo" src="/mswd-logo.jpg" alt="MSWD Villanueva logo"/><div><strong title="PWD Registry and Information System">PWD Registry and Information System</strong><div className="header-brand-details"><small className="office-subtitle">MSWDO | Villanueva, Misamis Oriental</small></div></div></div>
         <div className="top-actions">
           <span className="header-date"><CalendarDays size={17}/>{new Date().toLocaleDateString(undefined,{month:'long',day:'numeric',year:'numeric'})}</span>
-          <span className="header-user"><UserCircle size={20}/>{user?.role === 'Staff' ? 'Staff' : user?.fullname || 'Admin'}</span>
+          <span className="header-user"><UserCircle size={20}/>{user?.role === 'Staff' ? userDisplayName(user) : user?.fullname || 'Admin'}</span>
           <button type="button" className="icon-btn" title="Logout" aria-label="Log out" onClick={() => logoutDialog.current.showModal()}><LogOut size={18}/></button>
         </div>
       </header>
@@ -51,7 +54,7 @@ export default function Layout({children}) {
         <p id="logout-question">Are you sure you want to log out?</p>
         <div>
           <button type="button" className="secondary" autoFocus onClick={() => logoutDialog.current.close()}>No, Stay Signed In</button>
-          <button type="button" className="primary" onClick={() => {logoutDialog.current.close();clearSession();navigate('/login', {replace:true})}}>Yes, Log Out</button>
+          <button type="button" className="primary" onClick={() => {logoutDialog.current.close();void recordStaffEvent('Signed out');clearSession();navigate('/login', {replace:true})}}>Yes, Log Out</button>
         </div>
       </dialog>
     </div>

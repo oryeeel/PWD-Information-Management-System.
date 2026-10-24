@@ -23,6 +23,8 @@ function SummaryReports() {
   const today = new Date().toISOString().slice(0,10)
   const defaultStart = new Date(Date.now() - 60 * 86400000).toISOString().slice(0,10)
   const group = 'disabilityType'
+  const [allDates,setAllDates] = useState(true)
+  const [reportAllDates,setReportAllDates] = useState(true)
   const [start,setStart] = useState(defaultStart)
   const [end,setEnd] = useState(today)
   const [disabilityType,setDisabilityType] = useState('')
@@ -35,7 +37,7 @@ function SummaryReports() {
   const [reportBarangay,setReportBarangay] = useState('')
   const [exportError,setExportError] = useState('')
   const [exportSuccess,setExportSuccess] = useState('')
-  const validRange = start && end && start <= end
+  const validRange = allDates || Boolean(start && end && start <= end)
   const disabilityTypes = useMemo(() => [...new Set(records.map(record => record.disabilityType).filter(Boolean))].sort(),[records])
 
   useEffect(() => {
@@ -46,17 +48,17 @@ function SummaryReports() {
   },[reportOpen])
 
   function openReport() {
-    setReportStart(start);setReportEnd(end);setReportDisabilityType(disabilityType);setReportBarangay(barangay);setExportError('');setExportSuccess('');setReportOpen(true)
+    setReportAllDates(allDates);setReportStart(start);setReportEnd(end);setReportDisabilityType(disabilityType);setReportBarangay(barangay);setExportError('');setExportSuccess('');setReportOpen(true)
   }
 
   function exportReport(format) {
     if (!reportRangeValid || !['xlsx','pdf'].includes(format)) return
     try {
       setExportError('');setExportSuccess('')
-      const details = {group:reportGroup,start:reportStart,end:reportEnd,disabilityType:reportDisabilityType,barangay:reportBarangay,data:reportData,total:reportRecords.length}
+      const details = {allDates:reportAllDates,group:reportGroup,start:reportStart,end:reportEnd,disabilityType:reportDisabilityType,barangay:reportBarangay,data:reportData,total:reportRecords.length}
       const blob = format === 'xlsx' ? buildExcelReport(details) : buildPdfReport(details)
       if (!blob.size) throw new Error('The generated file is empty.')
-      downloadReport(blob,`PWD_Report_${reportGroup}_${reportStart}_to_${reportEnd}.${format}`)
+      downloadReport(blob,`PWD_Report_${reportGroup}_${reportAllDates ? 'All_Dates' : `${reportStart}_to_${reportEnd}`}.${format}`)
       try {
         const history = JSON.parse(localStorage.getItem('pwd_report_exports_v1') || '[]')
         localStorage.setItem('pwd_report_exports_v1',JSON.stringify([...history,new Date().toISOString()].slice(-500)))
@@ -65,12 +67,12 @@ function SummaryReports() {
     } catch (error) {setExportError(`Export failed: ${error.message}`)}
   }
 
-  const reportRangeValid = Boolean(reportStart && reportEnd && reportStart <= reportEnd &&
+  const reportRangeValid = reportAllDates || Boolean(reportStart && reportEnd && reportStart <= reportEnd &&
     (new Date(`${reportEnd}T00:00:00Z`) - new Date(`${reportStart}T00:00:00Z`)) <= 366 * 86400000)
   const reportRecords = useMemo(() => reportRangeValid ? records.filter(record => {
     const date = String(record.createdAt || '').slice(0,10)
-    return date >= reportStart && date <= reportEnd && matchesCategory(record,reportDisabilityType,reportBarangay)
-  }) : [],[records,reportStart,reportEnd,reportRangeValid,reportDisabilityType,reportBarangay])
+    return (reportAllDates || (date >= reportStart && date <= reportEnd)) && matchesCategory(record,reportDisabilityType,reportBarangay)
+  }) : [],[records,reportStart,reportEnd,reportAllDates,reportRangeValid,reportDisabilityType,reportBarangay])
   const reportData = useMemo(() => Object.entries(reportRecords.reduce((counts,record) => {
     const key = record[reportGroup] || 'Unspecified'
     counts[key] = (counts[key] || 0) + 1
@@ -79,8 +81,8 @@ function SummaryReports() {
 
   const selected = useMemo(() => validRange ? records.filter(record => {
     const date = String(record.createdAt || '').slice(0,10)
-    return date >= start && date <= end && matchesCategory(record,disabilityType,barangay)
-  }) : [],[records,start,end,validRange,disabilityType,barangay])
+    return (allDates || (date >= start && date <= end)) && matchesCategory(record,disabilityType,barangay)
+  }) : [],[records,start,end,allDates,validRange,disabilityType,barangay])
   const data = useMemo(() => Object.entries(selected.reduce((counts,record) => {
     const key = record[group] || 'Unspecified'
     counts[key] = (counts[key] || 0) + 1
@@ -96,11 +98,11 @@ function SummaryReports() {
     <section className="reports-panel">
       {error && <div className="empty">Could not load records: {error}</div>}
       <div className="reports-controls">
-        <div><strong>Date Range</strong><div className="reports-dates"><input aria-label="Start date" type="date" value={start} onChange={event => {setStart(event.target.value);setEnd(oneMonthAfter(event.target.value))}}/><span>➜</span><input aria-label="End date" type="date" value={end} min={start || undefined} onChange={event => setEnd(event.target.value)}/></div></div>
+        <div><label style={{display:'flex',alignItems:'center',gap:8,marginBottom:10}}><input type="checkbox" checked={allDates} onChange={event => setAllDates(event.target.checked)}/> All dates</label><strong>Date Range</strong><div className="reports-dates"><input disabled={allDates} aria-label="Start date" type="date" value={start} onChange={event => {setStart(event.target.value);setEnd(oneMonthAfter(event.target.value))}}/><span>➜</span><input disabled={allDates} aria-label="End date" type="date" value={end} min={start || undefined} onChange={event => setEnd(event.target.value)}/></div></div>
       </div>
       <div className="reports-category-filters"><label>Disability Type<select value={disabilityType} onChange={event => setDisabilityType(event.target.value)}><option value="">All disability types</option>{disabilityTypes.map(type => <option key={type} value={type}>{type}</option>)}</select></label><label>Barangay<select value={barangay} onChange={event => setBarangay(event.target.value)}><option value="">All barangays</option>{barangays.map(name => <option key={name} value={name}>{name}</option>)}</select></label><button type="button" onClick={() => {setDisabilityType('');setBarangay('')}} disabled={!disabilityType && !barangay}>Clear Filters</button></div>
       {!validRange && <div className="error">Choose a start date on or before the end date.</div>}
-      <h2>PWD by {groupNames[group]} <small>({validRange ? `${dateLabel(start)} - ${dateLabel(end)}` : 'Select dates'})</small></h2>
+      <h2>PWD by {groupNames[group]} <small>({allDates ? 'All dates' : validRange ? `${dateLabel(start)} - ${dateLabel(end)}` : 'Select dates'})</small></h2>
       <div className="chart-with-axes reports-labeled-chart">
         <div className="chart-y-title">Number of PWD records</div>
         <div className="column-chart-scroll">
@@ -126,7 +128,7 @@ function SummaryReports() {
         <div className="report-modal-preview">
           <h2>Report Preview</h2>
           <strong>PWD by Disability Type</strong>
-          <span>{reportRangeValid ? `${dateLabel(reportStart)} - ${dateLabel(reportEnd)}` : 'Choose a valid date range within one year on the Reports page.'}</span>
+          <span>{reportAllDates ? 'All dates' : reportRangeValid ? `${dateLabel(reportStart)} - ${dateLabel(reportEnd)}` : 'Choose a valid date range within one year on the Reports page.'}</span>
           <p className="report-preview-filters">Disability Type: {reportDisabilityType || 'All'} &middot; Barangay: {reportBarangay || 'All'}</p>
           <div className="report-preview-list">{reportData.map(([label,count]) => <div key={label}><span>{label}</span><b>{count}</b></div>)}{!reportData.length && <p>No records match the selected dates and filters.</p>}</div>
           <div className="report-preview-total"><strong>Total Records</strong><b>{reportRecords.length.toLocaleString()}</b></div>

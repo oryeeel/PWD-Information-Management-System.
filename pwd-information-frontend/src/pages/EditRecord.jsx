@@ -1,3 +1,4 @@
+import {apiFetch} from '../utils/apiFetch'
 import {barangays} from '../utils/barangays'
 import {buildRecordAddress,recordZone} from '../utils/recordAddress'
 import {validateRecordForm} from '../utils/validateRecordForm'
@@ -61,7 +62,7 @@ export default function EditRecord() {
           id
         );
 
-        const response = await fetch(
+        const response = await apiFetch(
           `http://localhost:8081/api/records/${id}`
         );
 
@@ -174,7 +175,7 @@ export default function EditRecord() {
     try {
       setSaving(true);
 
-      const response = await fetch(
+      const response = await apiFetch(
         `http://localhost:8081/api/records/${id}`,
         {
           method: "PUT",

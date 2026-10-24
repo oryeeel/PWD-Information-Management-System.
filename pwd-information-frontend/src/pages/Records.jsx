@@ -1,8 +1,9 @@
 import {barangays} from '../utils/barangays'
-import React, {useEffect, useMemo, useState} from 'react'
-import {Eye, Pencil, Archive, Printer, Search, RotateCcw, ChevronLeft, ChevronRight, UserRound} from 'lucide-react'
+import React, {useEffect, useMemo, useRef, useState} from 'react'
+import {Eye, Pencil, Archive, Printer, Search, RotateCcw, ChevronLeft, ChevronRight, UserRound, X, Upload} from 'lucide-react'
 import {Link, useSearchParams} from 'react-router-dom'
 import ArchivedRecords from '../components/ArchivedRecords'
+import {getSession} from '../utils/storage'
 import {archiveRecord, updateRecordPhoto, useRecords, notifyRecordsUpdated} from '../utils/recordsApi'
 
 const PAGE_SIZE = 10
@@ -23,6 +24,7 @@ function matchesAge(age, range) {
 export default function Records() {
   const [searchParams] = useSearchParams()
   const archived = searchParams.get('view') === 'archived'
+  const isStaff = getSession()?.role === 'Staff'
   const {records,error,refresh} = useRecords()
   const [searchInput,setSearchInput] = useState('')
   const [query,setQuery] = useState('')
@@ -33,6 +35,9 @@ export default function Records() {
   const [showAll,setShowAll] = useState(false)
   const [photoSaving,setPhotoSaving] = useState('')
   const [photoError,setPhotoError] = useState('')
+  const [previewRecord,setPreviewRecord] = useState(null)
+  const photoDialog = useRef(null)
+  const photoInput = useRef(null)
 
   const types = useMemo(() => [...new Set(records.map(r => r.disabilityType).filter(Boolean))].sort(), [records])
   const filtered = useMemo(() => records.filter(record => {
@@ -53,12 +58,14 @@ export default function Records() {
   }
 
   async function archive(id) {
+    if (!isStaff) return
     if (!window.confirm(`Archive ${id}? You can restore it later.`)) return
     try { await archiveRecord(id); notifyRecordsUpdated(); await refresh() }
     catch (err) { window.alert(`Failed to archive record: ${err.message}`) }
   }
 
   async function choosePhoto(event, record) {
+    if (!isStaff) return
     const file = event.target.files?.[0]
     event.target.value = ''
     if (!file) return
@@ -76,6 +83,7 @@ export default function Records() {
         reader.readAsDataURL(file)
       })
       await updateRecordPhoto(record.pwdId,photo)
+      setPreviewRecord(previous => previous?.pwdId === record.pwdId ? {...previous,photo} : previous)
       notifyRecordsUpdated()
       await refresh()
     } catch (error) {setPhotoError(`Could not save photo: ${error.message}`)}
@@ -85,7 +93,7 @@ export default function Records() {
   return <div className="records-page">
     <div className="page-title"><h1>{archived ? 'Archived Records' : 'PWD Records'}</h1><div className="records-header-actions">
       <Link className="secondary records-archive-button" to={archived ? '/records' : '/records?view=archived'}>{archived ? <ChevronLeft size={16}/> : <Archive size={16}/>}{archived ? 'Back to PWD Records' : 'Archived Records'}</Link>
-      <Link className="primary records-add" to="/add">+ Add New Record</Link>
+      {isStaff && <Link className="primary records-add" to="/add">+ Add New Record</Link>}
     </div></div>
     {archived ? <ArchivedRecords/> : <section className="records-panel">
       {error && <div className="empty">Could not load records: {error}</div>}
@@ -102,14 +110,22 @@ export default function Records() {
         <button type="button" className="records-clear" onClick={clearFilters}><RotateCcw size={15}/> Clear Filters</button>
       </div>
 
-      <div className="records-table-scroll"><table className="records-table"><thead><tr><th>ID</th><th>Full Name</th><th>Age</th><th>Gender</th><th>Disability Type</th><th>Barangay</th><th className="records-actions-heading">Actions</th></tr></thead><tbody>
-        {visible.map(record => <tr key={record.pwdId}>
-          <td>{record.pwdId}</td><td><div className="record-name-with-photo"><span className="record-photo-picker"><button type="button" className="record-list-photo" title="Click to add or change photo" aria-label={`Add or change photo for ${record.firstName} ${record.lastName}`} disabled={Boolean(photoSaving)} onClick={event => event.currentTarget.nextElementSibling.click()}>{record.photo ? <img src={record.photo} alt=""/> : <UserRound size={21} aria-hidden="true"/>}</button><input type="file" accept="image/png,image/jpeg,image/webp,image/gif" aria-label={`Choose photo for ${record.firstName} ${record.lastName}`} onChange={event => choosePhoto(event,record)}/></span><span>{record.firstName} {record.middleName} {record.lastName}{photoSaving === record.pwdId && <small className="record-photo-saving">Saving photo...</small>}</span></div></td><td>{record.age}</td><td>{record.gender}</td><td>{record.disabilityType}{record.disabilityType === 'Multiple Disabilities' && <small className="record-specific-disabilities">{(record.disabilities || []).join(', ') || 'Details not recorded'}</small>}</td><td>{record.barangay}</td>
-          <td><div className="record-actions"><Link className="view" title="View record" aria-label={`View ${record.pwdId}`} to={`/records/${record.pwdId}`}><Eye size={17}/></Link><Link className="edit" title="Edit record" aria-label={`Edit ${record.pwdId}`} to={`/records/${record.pwdId}/edit`}><Pencil size={16}/></Link><Link className="card" title="Print ID" aria-label={`Print ID for ${record.pwdId}`} to={`/records/${record.pwdId}/id`}><Printer size={17}/></Link><button className="archive" title="Archive record" aria-label={`Archive ${record.pwdId}`} onClick={() => archive(record.pwdId)}><Archive size={16}/></button></div></td>
+      <div className="records-table-scroll"><table className="records-table"><thead><tr><th scope="col">No.</th><th scope="col" className="records-id-number">ID Number</th><th scope="col" className="records-name-heading"><span>Full Name</span></th><th>Age</th><th>Gender</th><th>Disability Type</th><th>Barangay</th><th className="records-actions-heading">Actions</th></tr></thead><tbody>
+        {visible.map((record,index) => <tr key={record.pwdId}>
+          <td>{start + index + 1}</td><td className="records-id-number">{record.pwdId}</td><td className="records-name-cell"><div className="record-name-with-photo"><span className="record-photo-picker"><button type="button" className="record-list-photo" title="View photo" aria-label={`View photo of ${record.firstName} ${record.lastName}`} onClick={() => {setPreviewRecord(record);setPhotoError('');photoDialog.current.showModal()}}>{record.photo ? <img src={record.photo} alt=""/> : <UserRound size={21} aria-hidden="true"/>}</button></span><span>{record.firstName} {record.middleName} {record.lastName}{photoSaving === record.pwdId && <small className="record-photo-saving">Saving photo...</small>}</span></div></td><td>{record.age}</td><td>{record.gender}</td><td>{record.disabilityType}{record.disabilityType === 'Multiple Disabilities' && <small className="record-specific-disabilities">{(record.disabilities || []).join(', ') || 'Details not recorded'}</small>}</td><td>{record.barangay}</td>
+          <td><div className="record-actions"><Link className="view" title="View record" aria-label={`View ${record.pwdId}`} to={`/records/${record.pwdId}`}><Eye size={17}/></Link>{isStaff && <><Link className="edit" title="Edit record" aria-label={`Edit ${record.pwdId}`} to={`/records/${record.pwdId}/edit`}><Pencil size={16}/></Link><Link className="card" title="Print ID" aria-label={`Print ID for ${record.pwdId}`} to={`/records/${record.pwdId}/id`}><Printer size={17}/></Link></>}{isStaff && <button className="archive" title="Archive record" aria-label={`Archive ${record.pwdId}`} onClick={() => archive(record.pwdId)}><Archive size={16}/></button>}</div></td>
         </tr>)}
       </tbody></table>{!visible.length && <div className="empty">No records found.</div>}</div>
 
-      <div className="records-footer"><strong>Showing {filtered.length ? start + 1 : 0} to {start + visible.length} of {filtered.length} records {hasFilters && <span>(filtered)</span>}</strong><div className="records-footer-controls"><button type="button" className="secondary" aria-pressed={showAll} onClick={() => {setShowAll(!showAll);setPage(1)}}>{showAll ? 'Show 10 per page' : 'Show All'}</button>{!showAll && <div className="records-pages"><button aria-label="Previous page" disabled={currentPage === 1} onClick={() => setPage(currentPage - 1)}><ChevronLeft size={18}/></button><span>{currentPage}</span><button aria-label="Next page" disabled={currentPage === totalPages} onClick={() => setPage(currentPage + 1)}><ChevronRight size={18}/></button></div>}</div></div>
+      <div className="records-footer"><strong>{!filtered.length ? 'No records' : showAll ? `All ${filtered.length} records` : `Showing Records ${start + 1}-${start + visible.length} out of ${filtered.length} records`} {hasFilters && <span>(filtered)</span>}</strong><div className="records-footer-controls"><button type="button" className="secondary" aria-pressed={showAll} onClick={() => {setShowAll(!showAll);setPage(1)}}>{showAll ? 'Show 10 per page' : 'Show All'}</button>{!showAll && <div className="records-pages"><button aria-label="Previous page" disabled={currentPage === 1} onClick={() => setPage(currentPage - 1)}><ChevronLeft size={18}/></button><span>{currentPage}</span><button aria-label="Next page" disabled={currentPage === totalPages} onClick={() => setPage(currentPage + 1)}><ChevronRight size={18}/></button></div>}</div></div>
     </section>}
+    <dialog ref={photoDialog} className="records-photo-dialog" aria-labelledby="records-photo-title">
+      {previewRecord && <>
+        <header><h2 id="records-photo-title">{previewRecord.firstName} {previewRecord.lastName}</h2><button type="button" className="secondary" aria-label="Close photo preview" onClick={() => photoDialog.current.close()}><X size={20}/></button></header>
+        <div className="records-photo-preview">{previewRecord.photo ? <img src={previewRecord.photo} alt={`${previewRecord.firstName} ${previewRecord.lastName}`}/> : <><UserRound size={90}/><p>No photo added yet.</p></>}</div>
+        {photoError && <p className="records-photo-error" role="alert">{photoError}</p>}
+        {isStaff && <footer><button type="button" className="primary" disabled={Boolean(photoSaving)} onClick={() => photoInput.current.click()}><Upload size={16}/> {photoSaving ? 'Saving...' : previewRecord.photo ? 'Replace Photo' : 'Add Photo'}</button><input ref={photoInput} type="file" hidden accept="image/png,image/jpeg,image/webp,image/gif" aria-label="Choose profile photo" onChange={event => choosePhoto(event,previewRecord)}/><small>PNG, JPEG, WebP or GIF. Up to 400 KB.</small></footer>}
+      </>}
+    </dialog>
   </div>
 }

@@ -1,3 +1,4 @@
+import ActivityLogs from './pages/ActivityLogs'
 import React from 'react'
 import { Routes,Route,Navigate,useLocation } from 'react-router-dom'
 import Layout from './components/Layout'
@@ -33,12 +34,13 @@ export default function App(){
    <Route path="/" element={<Protected><RoleDashboard/></Protected>}/>
    <Route path="/records" element={<Protected><Records/></Protected>}/>
    <Route path="/records/:id" element={<Protected><RecordDetails/></Protected>}/>
-   <Route path="/records/:id/edit" element={<Protected><EditRecord/></Protected>}/>
-   <Route path="/records/:id/id" element={<Protected><IdCard/></Protected>}/>
+   <Route path="/records/:id/edit" element={<Protected role="Staff"><EditRecord/></Protected>}/>
+   <Route path="/records/:id/id" element={<Protected role="Staff"><IdCard/></Protected>}/>
    <Route path="/archive" element={<Navigate to="/records?view=archived" replace/>}/>
    <Route path="/recycle-bin" element={<Navigate to="/records?view=archived" replace/>}/>
-   <Route path="/add" element={<Protected><AddRecord/></Protected>}/>
+   <Route path="/add" element={<Protected role="Staff"><AddRecord/></Protected>}/>
    <Route path="/reports" element={<Protected><Reports/></Protected>}/>
+   <Route path="/activity-logs" element={<Protected role="Admin"><ActivityLogs/></Protected>}/>
    <Route path="/users" element={<Protected role="Admin"><Users/></Protected>}/>
    <Route path="/messages" element={<Protected role="Staff"><Messages/></Protected>}/>
    <Route path="*" element={<Navigate to="/" replace/>}/>

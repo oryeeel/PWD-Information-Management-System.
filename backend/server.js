@@ -4,6 +4,10 @@ const cors = require("cors");
 require("dotenv").config();
 
 const PwdRecord = require("./models/PwdRecord");
+const {purgeExpiredArchives, startArchiveCleanup} = require('./archiveRetention');
+const {createSmsHandler} = require('./sms');
+const ActivityLog = require('./models/ActivityLog');
+const {actorFrom,createActivityMiddleware,createActivityListHandler} = require('./activityLogs');
 
 const specificDisabilities = new Set([
   'Physical Disability', 'Visual Disability', 'Hearing Disability',
@@ -34,6 +38,14 @@ const app = express();
 
 app.use(cors());
 app.use(express.json({limit: '2mb'}));
+app.use(createActivityMiddleware(ActivityLog));
+app.get('/api/activity-logs', createActivityListHandler(ActivityLog));
+app.post('/api/activity-events', (req,res) => {
+  if (actorFrom(req)?.role !== 'Staff') return res.status(403).json({message:'Staff session required.'});
+  if (!['Signed in','Signed out','Viewed ID card'].includes(req.body?.action)) return res.status(400).json({message:'Unknown activity.'});
+  res.json({ok:true});
+});
+app.post('/api/messages/send', createSmsHandler({model: PwdRecord}));
 app.use('/api/records/:pwdId/document-photos',require('./routes/documentPhotos'));
 
 
@@ -43,6 +55,7 @@ app.use('/api/records/:pwdId/document-photos',require('./routes/documentPhotos')
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => {
+    startArchiveCleanup(PwdRecord);
     console.log("✅ MongoDB connected successfully!");
   })
   .catch((error) => {
@@ -351,11 +364,15 @@ async function recycleRecord(req, res) {
 app.post('/api/records/:pwdId/recycle', recycleRecord);
 app.delete('/api/records/:pwdId', recycleRecord);
 app.get('/api/recycle-bin', async (req, res) => {
-  try { res.json(await PwdRecord.find({deletedAt: {$ne: null}}).sort({deletedAt: -1})); }
+  try {
+    await purgeExpiredArchives(PwdRecord);
+    res.json(await PwdRecord.find({deletedAt: {$ne: null}}).sort({deletedAt: -1}));
+  }
   catch (error) { res.status(500).json({message: 'Failed to load Archive'}); }
 });
 app.post('/api/recycle-bin/:pwdId/restore', async (req, res) => {
   try {
+    await purgeExpiredArchives(PwdRecord);
     const record = await PwdRecord.findOneAndUpdate(
       {pwdId: req.params.pwdId, deletedAt: {$ne: null}},
       {$set: {deletedAt: null}}, {new: true}

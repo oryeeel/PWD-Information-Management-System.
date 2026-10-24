@@ -1,3 +1,5 @@
+import {apiFetch} from '../utils/apiFetch'
+import {getSession} from '../utils/storage'
 import RecordDocumentPhotos from '../components/RecordDocumentPhotos'
 import {barangays} from '../utils/barangays'
 import React, {useEffect, useState} from 'react'
@@ -55,6 +57,7 @@ function downloadPdf(record, fullName, paperSize, includePhoto) {
 
 export default function RecordDetails() {
   const {id} = useParams()
+  const isStaff = getSession()?.role === 'Staff'
   const [record,setRecord] = useState(null)
   const [loading,setLoading] = useState(true)
   const [error,setError] = useState('')
@@ -107,7 +110,7 @@ export default function RecordDetails() {
     }
     try {
       setSaving(true); setActionError('')
-      const response = await fetch(`http://localhost:8081/api/records/${encodeURIComponent(id)}`,{
+      const response = await apiFetch(`http://localhost:8081/api/records/${encodeURIComponent(id)}`,{
         method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({...form,age:Number(form.age) || 0}),
       })
       const data = await response.json()
@@ -136,7 +139,7 @@ export default function RecordDetails() {
     async function loadRecord() {
       try {
         setLoading(true); setError('')
-        const response = await fetch(`http://localhost:8081/api/records/${encodeURIComponent(id)}`)
+        const response = await apiFetch(`http://localhost:8081/api/records/${encodeURIComponent(id)}`)
         const data = await response.json()
         if (!response.ok) throw new Error(data.message || 'PWD record not found')
         if (cancelled) return
@@ -165,7 +168,8 @@ export default function RecordDetails() {
         <div className="record-portrait">{record.photo ? <img src={record.photo} alt={fullName}/> : <UserRound size={90}/>}</div>
         <strong>{record.pwdId}</strong><span className={record.status === 'Active' ? 'record-status active' : 'record-status'}>{record.status || 'N/A'}</span>
         <nav aria-label="Record sections"><button type="button" aria-pressed={section === 'personal'} onClick={() => setSection('personal')}><UserRound size={18}/> Personal Information</button><button type="button" aria-pressed={section === 'documents'} onClick={() => setSection('documents')}><FileText size={18}/> Documents</button></nav>
-        <Link className="secondary" to={`/records/${record.pwdId}/edit`}><Pencil size={16}/> Edit Record</Link>
+        {isStaff && <Link className="secondary" to={`/records/${record.pwdId}/edit`}><Pencil size={16}/> Edit Record</Link>}
+        {isStaff && <Link className="secondary" to={`/records/${record.pwdId}/id`}><CreditCard size={16}/> View ID</Link>}
       </aside>
       <div className="record-workspace-content">
         <header className="record-name-heading"><h2>{fullName}</h2><p>PWD ID: {record.pwdId}</p></header>

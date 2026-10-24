@@ -93,10 +93,10 @@ export default function Dashboard() {
       </section>
 
       <section className="panel dashboard-records-panel">
-        <div className="panel-head"><h3>Recent Records</h3><Link to="/records">View all records <ArrowRight size={14}/></Link></div>
+        <div className="panel-head"><h3>Recent Activity</h3><Link to="/records">View all records <ArrowRight size={14}/></Link></div>
         <div className="recent-table-scroll"><table className="recent-table"><thead><tr><th>ID</th><th>Full Name</th><th>Age</th><th>Gender</th><th>Disability Type</th><th>Barangay</th><th>Activity</th></tr></thead><tbody>
           {recent.map(({record,event}) => <tr key={record.pwdId}><td><Link to={`/records/${record.pwdId}`}>{record.pwdId}</Link></td><td>{record.firstName} {record.lastName}</td><td>{record.age}</td><td>{record.gender}</td><td>{record.disabilityType}</td><td>{record.barangay}</td><td><span className="recent-activity">{event.label}</span></td></tr>)}
-        </tbody></table>{!recent.length && <div className="empty">No recent records.</div>}</div>
+        </tbody></table>{!recent.length && <div className="empty">No recent activity.</div>}</div>
       </section>
     </div>
   </div>

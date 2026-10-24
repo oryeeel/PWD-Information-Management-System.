@@ -10,6 +10,11 @@ test('recycle and restore preserve records, hide recycled records, and reserve I
   const matches = (row,filter) => Object.entries(filter).every(([key,value]) =>
     value && typeof value === 'object' && '$ne' in value ? row[key] != null : value === null ? row[key] == null : row[key] === value);
   const model = {
+    deleteMany: async filter => {
+      for (let i = rows.length - 1; i >= 0; i--) {
+        if (rows[i].deletedAt instanceof Date && rows[i].deletedAt <= filter.deletedAt.$lte) rows.splice(i, 1);
+      }
+    },
     find: (filter={}) => ({sort: async () => rows.filter(row => matches(row,filter))}),
     findOne: (filter) => filter ? Promise.resolve(rows.find(row => matches(row,filter))) : {sort: async () => rows.at(-1)},
     findOneAndUpdate: async (filter,update) => {
@@ -29,6 +34,11 @@ test('recycle and restore preserve records, hide recycled records, and reserve I
       if(name==='cors') return () => () => {};
       if(name==='dotenv') return {config(){}};
       if(name==='./models/PwdRecord') return model;
+      if(name==='./routes/documentPhotos') return () => {};
+      if(name==='./archiveRetention') return {...require('../archiveRetention'), startArchiveCleanup(){}};
+      if(name==='./sms') return {createSmsHandler: () => () => {}};
+      if(name==='./models/ActivityLog') return {};
+      if(name==='./activityLogs') return {actorFrom:()=>null,createActivityMiddleware:()=>()=>{},createActivityListHandler:()=>()=>{}};
       throw new Error(name);
     },process:{env:{}},console:{log(){},error(){}},Date,
   });
@@ -58,4 +68,10 @@ test('recycle and restore preserve records, hide recycled records, and reserve I
   assert.equal((await call('post','/api/recycle-bin/:pwdId/restore')).code,404);
   assert.equal((await call('delete','/api/records/:pwdId')).code,200);
   assert.equal(rows.length,2); // Old clients also soft-delete.
+  rows.find(row => row.pwdId === saved.pwdId).deletedAt = new Date('2000-01-01');
+  assert.equal((await call('post','/api/recycle-bin/:pwdId/restore')).code,404);
+  assert.equal(rows.length,1); // Expired archives cannot be restored.
+  rows.push({pwdId:'PWD-0003',deletedAt:new Date('2000-01-01')});
+  assert.equal((await call('get','/api/recycle-bin')).data.length,0);
+  assert.equal(rows.length,1); // Listing the archive also purges expired entries.
 });

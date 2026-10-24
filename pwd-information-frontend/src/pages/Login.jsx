@@ -1,3 +1,4 @@
+import {recordStaffEvent} from '../utils/apiFetch'
 import React, {useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Eye, EyeOff, EarOff, Brain, HeartHandshake, Speech, BrainCircuit } from 'lucide-react'
@@ -35,6 +36,7 @@ export default function Login(){
     const user = loadUsers().find(u => u.username===username && u.password===password && u.role===role && u.status==='Active')
     if(!user){ setError('Invalid username, password, or role.'); return }
     setSession({id:user.id, fullname:user.fullname, username:user.username, role:user.role})
+    void recordStaffEvent('Signed in')
     nav('/')
   }
 

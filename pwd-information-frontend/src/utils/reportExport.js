@@ -4,12 +4,12 @@ import * as XLSX from 'xlsx'
 const groupNames = {disabilityType:'Disability Type',barangay:'Barangay',gender:'Gender',status:'Status'}
 const dateLabel = value => new Date(`${value}T00:00:00`).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'})
 
-export function buildExcelReport({group,start,end,disabilityType,barangay,data,total}) {
+export function buildExcelReport({group,start,end,allDates=false,disabilityType,barangay,data,total}) {
   const sheet = XLSX.utils.aoa_to_sheet([
     ['PWD Registry and Information System'],
     ['MSWDO | Villanueva, Misamis Oriental'],
     [`PWD by ${groupNames[group]}`],
-    [`Date Range: ${dateLabel(start)} - ${dateLabel(end)}`],
+    [`Date Range: ${allDates ? 'All dates' : `${dateLabel(start)} - ${dateLabel(end)}`}`],
     [`Disability Type: ${disabilityType || 'All'}`],
     [`Barangay: ${barangay || 'All'}`],
     [],
@@ -25,7 +25,7 @@ export function buildExcelReport({group,start,end,disabilityType,barangay,data,t
   return new Blob([bytes],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'})
 }
 
-export function buildPdfReport({group,start,end,disabilityType,barangay,data,total}) {
+export function buildPdfReport({group,start,end,allDates=false,disabilityType,barangay,data,total}) {
   const pdf = new jsPDF({format:'a4'})
   pdf.setFont('helvetica','bold');pdf.setFontSize(13)
   pdf.text('PWD Registry and Information System',18,20)
@@ -35,7 +35,7 @@ export function buildPdfReport({group,start,end,disabilityType,barangay,data,tot
   pdf.setFont('helvetica','bold');pdf.setFontSize(14)
   pdf.text(`PWD by ${groupNames[group]}`,18,44)
   pdf.setFont('helvetica','normal');pdf.setFontSize(10)
-  pdf.text(`${dateLabel(start)} - ${dateLabel(end)}   |   Total records: ${total}`,18,52)
+  pdf.text(`${allDates ? 'All dates' : `${dateLabel(start)} - ${dateLabel(end)}`}   |   Total records: ${total}`,18,52)
   pdf.text(`Disability Type: ${disabilityType || 'All'}`,18,59)
   pdf.text(`Barangay: ${barangay || 'All'}`,18,65)
   const max = Math.max(1,...data.map(([,count]) => count))

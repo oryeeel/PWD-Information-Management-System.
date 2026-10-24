@@ -1,9 +1,11 @@
+import {apiFetch} from './apiFetch'
 import React from 'react'
+import {createLiveStore} from './liveStore'
 
 const API = 'http://localhost:8081/api/records'
 
 async function request(url, options) {
-  const response = await fetch(url, options)
+  const response = await apiFetch(url, options)
   const contentType = response.headers.get('content-type') || ''
   if (!contentType.includes('application/json')) {
     if (response.status === 404 && (url.includes('/recycle') || url.includes('/restore'))) throw new Error('Restart the backend server to enable archiving. No record was changed.')
@@ -25,7 +27,7 @@ export const getArchivedRecords = () => request('http://localhost:8081/api/recyc
 export const restoreRecord = pwdId => request(`http://localhost:8081/api/recycle-bin/${encodeURIComponent(pwdId)}/restore`, {method:'POST'})
 export async function updateRecordPhoto(pwdId, photo) {
   const recordUrl = `${API}/${encodeURIComponent(pwdId)}`
-  const response = await fetch(`${recordUrl}/photo`, {
+  const response = await apiFetch(`${recordUrl}/photo`, {
     method: 'PATCH', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({photo}),
   })
   // A backend started before the photo route was added responds with an HTML 404.
@@ -48,19 +50,18 @@ export async function updateRecordPhoto(pwdId, photo) {
 }
 export const trackRecordView = pwdId => request(`${API}/${encodeURIComponent(pwdId)}/view`, {method: 'POST'})
 
+const recordsStore = createLiveStore(getRecords)
+const archiveStore = createLiveStore(getArchivedRecords)
+
 export function useRecords() {
-  const [records, setRecords] = React.useState([])
-  const [error, setError] = React.useState('')
-  const refresh = React.useCallback(async () => {
-    try { setRecords(await getRecords()); setError('') }
-    catch (err) { setError(err.message) }
-  }, [])
-  React.useEffect(() => {
-    refresh()
-    window.addEventListener('pwd-records-updated', refresh)
-    return () => window.removeEventListener('pwd-records-updated', refresh)
-  }, [refresh])
-  return {records, error, refresh}
+  return {...React.useSyncExternalStore(recordsStore.subscribe,recordsStore.getSnapshot,recordsStore.getSnapshot),refresh:recordsStore.refresh}
 }
 
-export const notifyRecordsUpdated = () => window.dispatchEvent(new Event('pwd-records-updated'))
+export function useArchivedRecords() {
+  return {...React.useSyncExternalStore(archiveStore.subscribe,archiveStore.getSnapshot,archiveStore.getSnapshot),refresh:archiveStore.refresh}
+}
+
+export function notifyRecordsUpdated() {
+  window.dispatchEvent(new Event('pwd-records-updated'))
+  try {localStorage.setItem('pwd-records-revision',`${Date.now()}-${Math.random()}`)} catch { /* Polling keeps other sessions current when storage is unavailable. */ }
+}
