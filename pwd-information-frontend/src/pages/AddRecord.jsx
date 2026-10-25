@@ -6,6 +6,7 @@ import {Save, UserRound} from 'lucide-react'
 import {createRecord, notifyRecordsUpdated} from '../utils/recordsApi'
 import {disabilityTypes, specificDisabilities} from '../utils/disabilities'
 import {validateRecordForm} from '../utils/validateRecordForm'
+import {getSession} from '../utils/storage'
 
 const empty = {lastName:'',firstName:'',middleName:'',gender:'',birthdate:'',age:'',barangay:'',zone:'',disabilityType:'',disabilities:[],contact:'',civilStatus:'',bloodType:'',emergencyContactName:'',emergencyContactPhone:'',photo:''}
 
@@ -55,7 +56,7 @@ export default function AddRecord() {
     try {
       setSaving(true); setMessage('')
       const address = buildRecordAddress(form.zone,form.barangay)
-      const saved = await createRecord({...form,age:Number(form.age) || 0,address,status:'Active',addedBy:'Admin'})
+      const saved = await createRecord({...form,age:Number(form.age) || 0,address,status:'Active',addedBy:getSession()?.username || 'Unknown'})
       notifyRecordsUpdated()
       navigate(`/records/${saved.pwdId}`)
     } catch (error) {setMessage(`Could not save record: ${error.message}`)}

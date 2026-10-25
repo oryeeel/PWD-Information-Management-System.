@@ -1,3 +1,4 @@
+import {userDisplayName} from '../utils/userDisplayName'
 import {apiFetch} from '../utils/apiFetch'
 import {getSession} from '../utils/storage'
 import RecordDocumentPhotos from '../components/RecordDocumentPhotos'
@@ -20,7 +21,7 @@ function Field({label,value}) {
 }
 
 function PrintSheet({record,fullName}) {
-  return <div className="record-print-preview"><div className="print-sheet-title"><strong>PWD Registry and Information System</strong><small>MSWDO | Villanueva, Misamis Oriental</small><b>PWD RECORD</b></div><Field label="ID" value={record.pwdId}/><Field label="Full Name" value={fullName}/><Field label="Birthdate" value={displayDate(record.birthdate)}/><Field label="Age" value={record.age ?? 'N/A'}/><Field label="Gender" value={record.gender}/><Field label="Address" value={record.address || record.barangay}/><Field label="Disability Type" value={record.disabilityType}/>{record.disabilityType === 'Multiple Disabilities' && <Field label="Specific Disabilities" value={(record.disabilities || []).join(', ')}/>}<Field label="Contact Number" value={record.contact}/><Field label="Status" value={record.status}/><Field label="Date Added" value={displayDate(record.createdAt)}/><Field label="Added by" value={record.addedBy}/></div>
+  return <div className="record-print-preview"><div className="print-sheet-title"><strong>PWD Registry and Information System</strong><small>MSWDO | Villanueva, Misamis Oriental</small><b>PWD RECORD</b></div><Field label="ID" value={record.pwdId}/><Field label="Full Name" value={fullName}/><Field label="Birthdate" value={displayDate(record.birthdate)}/><Field label="Age" value={record.age ?? 'N/A'}/><Field label="Gender" value={record.gender}/><Field label="Address" value={record.address || record.barangay}/><Field label="Disability Type" value={record.disabilityType}/>{record.disabilityType === 'Multiple Disabilities' && <Field label="Specific Disabilities" value={(record.disabilities || []).join(', ')}/>}<Field label="Contact Number" value={record.contact}/><Field label="Status" value={record.status}/><Field label="Date Added" value={displayDate(record.createdAt)}/><Field label="Added by" value={record.addedBy && userDisplayName({username:record.addedBy})}/></div>
 }
 
 function downloadPdf(record, fullName, paperSize, includePhoto) {
@@ -42,7 +43,7 @@ function downloadPdf(record, fullName, paperSize, includePhoto) {
     ['Address',record.address || record.barangay], ['Disability Type',record.disabilityType],
     ...(record.disabilityType === 'Multiple Disabilities' ? [['Specific Disabilities',(record.disabilities || []).join(', ')]] : []),
     ['Contact Number',record.contact], ['Status',record.status],
-    ['Date Added',displayDate(record.createdAt)], ['Added by',record.addedBy],
+    ['Date Added',displayDate(record.createdAt)], ['Added by',record.addedBy && userDisplayName({username:record.addedBy})],
   ]
   let y = 60
   pdf.setFontSize(11)
@@ -176,7 +177,7 @@ export default function RecordDetails() {
         <section className="record-personal-section" hidden={section !== 'personal'} aria-label="Personal information"><h3>Personal Information</h3><div className="record-info-grid">
           <Field label="Full Name" value={fullName}/><Field label="Birthdate" value={displayDate(record.birthdate)}/><Field label="Age" value={record.age ?? 'N/A'}/><Field label="Gender" value={record.gender}/><Field label="Address" value={record.address || record.barangay}/><Field label="Disability Type" value={record.disabilityType}/>
           {record.disabilityType === 'Multiple Disabilities' && <Field label="Specific Disabilities" value={(record.disabilities || []).join(', ')}/>}
-          <Field label="Contact Number" value={record.contact}/><Field label="Civil Status" value={record.civilStatus}/><Field label="Blood Type" value={record.bloodType}/><Field label="Emergency Contact" value={record.emergencyContactName}/><Field label="Emergency Number" value={record.emergencyContactPhone}/><Field label="Date Added" value={displayDate(record.createdAt)}/><Field label="Added by" value={record.addedBy}/>
+          <Field label="Contact Number" value={record.contact}/><Field label="Civil Status" value={record.civilStatus}/><Field label="Blood Type" value={record.bloodType}/><Field label="Emergency Contact" value={record.emergencyContactName}/><Field label="Emergency Number" value={record.emergencyContactPhone}/><Field label="Date Added" value={displayDate(record.createdAt)}/><Field label="Added by" value={record.addedBy && userDisplayName({username:record.addedBy})}/>
         </div></section>
         <section className="record-docs-section" hidden={section !== 'documents'} aria-label="Record documents"><h3>Documents</h3><RecordDocumentPhotos key={record.pwdId} record={record} onPhotoUpdated={photo => setRecord(previous => ({...previous,photo}))}/></section>
       </div>

@@ -1,9 +1,14 @@
 const {test} = require('node:test');
 const assert = require('node:assert/strict');
 const {EventEmitter} = require('node:events');
-const {actorFrom,actionFor,createActivityMiddleware,createActivityListHandler} = require('../activityLogs');
+const {actorFrom,creatorFor,actionFor,createActivityMiddleware,createActivityListHandler} = require('../activityLogs');
 const staff = {id:2,username:'staff1',fullname:'MSWDO Staff 1',role:'Staff'};
 const header = actor => ({'x-pwd-actor':encodeURIComponent(JSON.stringify(actor))});
+test('record creator uses the signed-in staff identity instead of a hardcoded body value',()=>{
+  assert.equal(creatorFor({headers:header(staff),body:{addedBy:'Admin'}}),'staff1');
+  assert.equal(creatorFor({headers:header({...staff,id:3,username:'staff2'}),body:{addedBy:'Admin'}}),'staff2');
+  assert.equal(creatorFor({headers:{},body:{addedBy:'Admin'}}),'Unknown');
+});
 function response() {
   return Object.assign(new EventEmitter(),{statusCode:200,status(code){this.statusCode=code;return this},json(data){this.data=data;return this}});
 }

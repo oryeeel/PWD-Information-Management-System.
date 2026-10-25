@@ -27,6 +27,10 @@ function actionFor(req, payload) {
   return null;
 }
 
+function creatorFor(req) {
+  return actorFrom(req)?.username || 'Unknown';
+}
+
 function createActivityMiddleware(model, logger = console) {
   return (req, res, next) => {
     const actor = actorFrom(req);
@@ -69,4 +73,4 @@ function createActivityListHandler(model) {
   };
 }
 
-module.exports = {actorFrom,actionFor,createActivityMiddleware,createActivityListHandler};
+module.exports = {actorFrom,creatorFor,actionFor,createActivityMiddleware,createActivityListHandler};

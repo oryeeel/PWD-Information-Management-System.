@@ -1,13 +1,18 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const dns = require("node:dns");
+
 require("dotenv").config();
+
+// Use Google DNS for MongoDB Atlas DNS lookups
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 const PwdRecord = require("./models/PwdRecord");
 const {purgeExpiredArchives, startArchiveCleanup} = require('./archiveRetention');
 const {createSmsHandler} = require('./sms');
 const ActivityLog = require('./models/ActivityLog');
-const {actorFrom,createActivityMiddleware,createActivityListHandler} = require('./activityLogs');
+const {actorFrom,creatorFor,createActivityMiddleware,createActivityListHandler} = require('./activityLogs');
 
 const specificDisabilities = new Set([
   'Physical Disability', 'Visual Disability', 'Hearing Disability',
@@ -125,6 +130,7 @@ app.post("/api/records", async (req, res) => {
     const newRecord =
       new PwdRecord({
         ...req.body,
+        addedBy: creatorFor(req),
         pwdId,
         status: "Active",
         deletedAt: null,
@@ -343,7 +349,7 @@ app.put(
 // ============================================
 // START SERVER
 // ============================================
-const PORT = 8081;
+const PORT = process.env.PORT || 8081;
 
 app.listen(PORT, () => {
   console.log(
